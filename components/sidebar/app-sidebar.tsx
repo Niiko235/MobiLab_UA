@@ -20,14 +20,24 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupContent>
+              <SidebarMenuItem className="flex items-center ">
+                <div className="size-10 flex items-center justify-center bg-purple-600 rounded-full mr-3">
+                  <span className="text-2xl">🎓</span>
+                </div>
+                <div><h1 className="text-xl font-bold">MobiLab UA</h1><span>Nombre del user</span></div>
+              </SidebarMenuItem>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>OPCIONES PRINCIPALES</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {essentials.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
-                      <item.icon />
+                     <span>{item.icon}</span>
                       <span>{item.title}</span>
                     </a>
                   </SidebarMenuButton>
@@ -44,7 +54,7 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
-                      <item.icon />
+                      <span>{item.icon}</span>
                       <span>{item.title}</span>
                     </a>
                   </SidebarMenuButton>
