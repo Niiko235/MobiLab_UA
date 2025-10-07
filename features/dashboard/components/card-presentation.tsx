@@ -31,14 +31,11 @@ export function CardPresentation() {
           </AlertDialogHeader>
 
           <AlertDialogDescription className="space-y-4 text-gray-700">
-            <p className="text-xl">
-              {' '}
               Soy el Dr. Cortex, y mi misión es ayudarte a comprender los
               fenómenos físicos que estudiarás aquí. Antes de que entres a cada
               simulación, estaré contigo para explicarte la teoría, las leyes y
               los principios que se ponen en juego. Piensa en mí como tu guía
               científico
-            </p>
           </AlertDialogDescription>
           <div className="absolute left-[-400px] bottom-[-300px] z-50 w-[600px] h-[510px]">
             <Image
@@ -71,17 +68,13 @@ export function CardPresentation() {
           </AlertDialogHeader>
 
           <AlertDialogDescription className="space-y-4 text-gray-700">
-            <p className="text-xl">
-              {' '}
               Soy Paco el Ingeniero, y estaré a tu lado para mostrarte cómo
               funciona cada simulación, yo me encargaré de guiarte en la
               práctica: cómo usar los controles, mover parámetros y observar los
               resultados. Mi trabajo es que experimentes, pruebes y veas la
               física en acción.
-            </p>
-          
           </AlertDialogDescription>
-           <div className="absolute left-[-300px] bottom-[-300px] z-50 w-[600px] h-[510px]">
+          <div className="absolute left-[-300px] bottom-[-300px] z-50 w-[600px] h-[510px]">
             <Image
               src="/assets/paco-el-ing/paco-normal.png"
               alt="Dr. Cortex"
