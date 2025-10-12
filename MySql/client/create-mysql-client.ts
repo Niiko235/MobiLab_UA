@@ -1,4 +1,4 @@
-import mysql from 'mysql2/promise';
+import mysql from 'mysql2/promise'
 
 export async function createMySqlClient() {
   const connection = await mysql.createConnection({
@@ -7,7 +7,11 @@ export async function createMySqlClient() {
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
-  });
+  })
 
-  return  connection;
+  const connectionProduct = await mysql.createConnection(
+    String(process.env.DATABASE_URL)
+  )
+
+  return connectionProduct
 }

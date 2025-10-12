@@ -20,7 +20,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { singIn } from '@/MySql/sql/sing-in'
-import {useRouter} from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 const schema = z.object({
@@ -52,7 +52,7 @@ export function LoginForm() {
 
   async function onSubmit(values: FormFields) {
     const response = await singIn({
-      email: values.email, 
+      email: values.email,
       password: values.password,
     })
 
@@ -145,10 +145,8 @@ export function LoginForm() {
 
             {errorSesion && (
               <Alert variant={'destructive'}>
-                
                 <AlertTitle>Eror al iniciar sesión</AlertTitle>
                 <AlertDescription>
-                  
                   Las credenciales no coinciden con las de ningun usuario
                 </AlertDescription>
               </Alert>
