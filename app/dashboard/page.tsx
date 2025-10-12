@@ -11,13 +11,12 @@
 //     )
 // }
 
-
-import { CardPresentation } from '@/features/dashboard/components/card-presentation'
-
-
+import Latex from 'react-latex-next';
 
 export default function Page() {
   return (
-   <CardPresentation></CardPresentation>
+    <div className='text-sky-600 text-2xl'>
+      <Latex>{`$$\\frac{a}{b}$$`}</Latex>
+    </div>
   )
 }

@@ -22,6 +22,7 @@ import {
 import { singIn } from '@/MySql/sql/sing-in'
 import { useRouter } from 'next/navigation'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+// import { select } from '@/MySql/select'
 
 const schema = z.object({
   email: z
@@ -62,6 +63,14 @@ export function LoginForm() {
       setOpen(false)
       router.push('/dashboard')
     }
+
+    // const { ok, data } = await select()
+    // if (!ok) {
+    //   console.log('\n\n\n\n\n\n Entramos!!!! iuiuiuiu \n\n\n\n\n\n\n')
+    //   console.log(data)
+    // } else {
+    //   console.log('\n\n\n\n\n\n Entramos!!!! iuiuiuiu \n\n\n\n\n\n\n')
+    // }
   }
 
   return (

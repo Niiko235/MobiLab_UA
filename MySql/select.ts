@@ -1,3 +1,5 @@
+'use server'
+
 import { RowDataPacket } from 'mysql2'
 import { createMySqlClient } from './client/create-mysql-client'
 
