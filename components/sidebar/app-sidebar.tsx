@@ -16,6 +16,7 @@ import {
 import { logout } from '@/features/auth/actions/log-out'
 import { LogOut } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { Separator } from '../ui/separator'
 
 type AppSidebarProps = {
   name: string
@@ -50,15 +51,16 @@ export function AppSidebar({ name }: AppSidebarProps) {
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
+          <Separator></Separator>
           <SidebarGroupLabel>OPCIONES PRINCIPALES</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {essentials.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.title} >
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
-                      <span>{item.icon}</span>
-                      <span>{item.title}</span>
+                      <span className='text-md'>{item.icon}</span>
+                      <span className='text-md'>{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -67,6 +69,7 @@ export function AppSidebar({ name }: AppSidebarProps) {
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
+          <Separator></Separator>
           <SidebarGroupLabel>JUEGOS INTERACTIVOS</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -74,8 +77,8 @@ export function AppSidebar({ name }: AppSidebarProps) {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
-                      <span>{item.icon}</span>
-                      <span>{item.title}</span>
+                      <span className='text-md'>{item.icon}</span>
+                      <span className='text-md'>{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
