@@ -1,7 +1,10 @@
+
 import { Button } from '@/components/ui/button'
 import { LoginForm } from '@/features/auth/components/login-form'
+import { RegisterForm } from '@/features/auth/components/register-form'
 
 export default function Page() {
+
   return (
     <>
       <div className="min-h-screen  flex flex-col ">
@@ -12,13 +15,14 @@ export default function Page() {
           </div>
           <div className="mr-28 flex w-1/2 gap-8 justify-end">
             <LoginForm />
-            <Button
+            {/* <Button
               variant="outline"
               size="lg"
               className="text-white bg-[#50178d] text-xl"
             >
               Registrarse
-            </Button>
+            </Button> */}
+            <RegisterForm />
           </div>
         </nav>
         <section className="bg-gradient-to-br from-[#667eea] to-[#764ba2] h-150 flex items-center justify-center flex-col text-center gap-8 text-white">
