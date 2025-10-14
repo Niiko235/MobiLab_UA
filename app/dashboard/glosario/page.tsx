@@ -1,7 +1,7 @@
 'use client'
 
 // import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { TableBody, TableCell, TableHead, TableHeader, TableRow, Table} from '@/components/ui/table'
+import { TableBody, TableCell, TableRow, Table} from '@/components/ui/table'
 
 
 const glosario = [
@@ -47,7 +47,7 @@ export default function Page() {
       <Table className='w-full'>
         <TableBody>
           {glosario.map((i) => (
-            <TableRow>
+            <TableRow key={i.titulo}>
                 <TableCell>
                     <h1 className='font-bold text-lg'>{i.titulo}</h1>
                     <p>{i.descripcion}</p>
