@@ -1,6 +1,6 @@
 'use client'
 
-import { essentials, topycs } from '@/components/sidebar/routes'
+import { conocimiento, essentials, topycs } from '@/components/sidebar/routes'
 
 import {
   Sidebar,
@@ -74,6 +74,24 @@ export function AppSidebar({ name }: AppSidebarProps) {
           <SidebarGroupContent>
             <SidebarMenu>
               {topycs.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <a href={item.url}>
+                      <span className='text-md'>{item.icon}</span>
+                      <span className='text-md'>{item.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <Separator></Separator>
+          <SidebarGroupLabel>CONOCIMIENTOS</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {conocimiento.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a href={item.url}>

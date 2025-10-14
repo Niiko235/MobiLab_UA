@@ -19,17 +19,18 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { singIn } from '@/features/auth/actions/sing-in'
+
 import { useRouter } from 'next/navigation'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { singIn } from '../actions/sing-in'
 // import { select } from '@/MySql/select'
 
 const schema = z.object({
-  email: z
+  correo: z
     .string()
     .email({ message: 'El correo no es válido' })
     .nonempty('El correo es obligatorio'),
-  password: z
+  contrasenia: z
     .string()
     .min(6, 'La contraseña debe tener al menos 6 caracteres')
     .max(12, 'La contraseña debe tener como máximo 12 caracteres'),
@@ -46,19 +47,20 @@ export function LoginForm() {
   const form = useForm<FormFields>({
     resolver: zodResolver(schema),
     defaultValues: {
-      email: '',
-      password: '',
+      correo: '',
+      contrasenia: '',
     },
   })
 
   async function onSubmit(values: FormFields) {
     const response = await singIn({
-      email: values.email,
-      password: values.password,
+      correo: values.correo,
+      contrasenia: values.contrasenia,
     })
 
     if (!response.ok) {
       setErrorSesion(true)
+      
     } else {
       setOpen(false)
       router.push('/dashboard')
@@ -98,12 +100,12 @@ export function LoginForm() {
           >
             <FormField
               control={form.control}
-              name="email"
+              name="correo"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel
                     className={
-                      form.formState.errors.email ? 'text-destructive' : ''
+                      form.formState.errors.correo ? 'text-destructive' : ''
                     }
                   >
                     Correo
@@ -113,7 +115,7 @@ export function LoginForm() {
                       placeholder="tuemail@ejemplo.com"
                       {...field}
                       className={
-                        form.formState.errors.email
+                        form.formState.errors.correo
                           ? 'border-destructive focus-visible:ring-destructive'
                           : ''
                       }
@@ -126,12 +128,12 @@ export function LoginForm() {
 
             <FormField
               control={form.control}
-              name="password"
+              name="contrasenia"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel
                     className={
-                      form.formState.errors.password ? 'text-destructive' : ''
+                      form.formState.errors.contrasenia ? 'text-destructive' : ''
                     }
                   >
                     Contraseña
@@ -141,7 +143,7 @@ export function LoginForm() {
                       type="password"
                       {...field}
                       className={
-                        form.formState.errors.password
+                        form.formState.errors.contrasenia
                           ? 'border-destructive focus-visible:ring-destructive'
                           : ''
                       }

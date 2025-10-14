@@ -7,11 +7,6 @@ export const essentials = [
     icon: '🏠',
   },
   {
-    title: "Documentación",
-    url: "/dashboard/cards",
-    icon: '📚',
-  },
-  {
     title: "Información Personal",
     url: "/dashboard/personal-information",
     icon: '👤',
@@ -40,4 +35,17 @@ export const topycs = [
     icon: '🌌',
   },
   
+]
+
+export const conocimiento = [
+    {
+    title: "Documentación",
+    url: "/dashboard/documentation",
+    icon: '📚',
+  },
+    {
+    title: "Glosario",
+    url: "/dashboard/glosario",
+    icon: '🌐',
+  }
 ]

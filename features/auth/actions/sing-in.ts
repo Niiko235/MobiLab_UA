@@ -1,19 +1,20 @@
 'use server'
 import { RowDataPacket } from 'mysql2'
-import { createMySqlClient } from '../../../MySql/client/create-mysql-client'
+
 import { cookies } from 'next/headers'
 import jwt from 'jsonwebtoken'
+import { createMySqlClient } from '@/MySql/client/create-mysql-client'
 
 type credentialsProps = {
-  email: string
-  password: string
+  correo: string
+  contrasenia: string
 }
 
 type User = {
   id: number
   first_name: string
   email: string
-  onboarding_termiando: boolean
+  onboarding_terminado: boolean
 }
 
 // agregar onboarding
@@ -24,14 +25,14 @@ const JWT_SECRET = process.env.JWT_SECRET
 // hashear la contraseña
 // consulta de la contraseña hasheada y el correo
 
-export async function singIn({ email, password }: credentialsProps) {
+export async function singIn({ correo, contrasenia }: credentialsProps) {
   let mysql
   try {
     mysql = await createMySqlClient()
 
     const [response] = await mysql.query<(User & RowDataPacket)[]>(
-      'SELECT id, nombres, correo, onboarding_termiando FROM estudiantes WHERE correo = ? AND contrasenia = ?',
-      [email, password]
+      'SELECT id, nombres, correo, onboarding_terminado FROM estudiantes WHERE correo = ? AND contrasenia = ?',
+      [correo, contrasenia]
     )
 
     if (response.length === 0) {
@@ -43,7 +44,7 @@ export async function singIn({ email, password }: credentialsProps) {
         id: response[0].id,
         first_name: response[0].nombres,
         email: response[0].correo,
-        onboarding_termiando: response[0].onboarding_termiando,
+        onboarding_termiando: response[0].onboarding_terminado,
       },
       JWT_SECRET as string
     )

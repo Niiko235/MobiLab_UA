@@ -20,26 +20,29 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { registerStudent } from '../actions/registerStudent'
+
 
 const schema = z.object({
-  first_name: z
+  nombres: z
     .string()
     .nonempty('Los nombres son obligatorios')
     .min(5, 'El nombre debe tener al menos 5 caracteres')
     .max(30, 'El nombre debe tener como máximo 30 caracteres'),
-  last_name: z
+  apellidos: z
     .string()
     .nonempty('Los apellidos son obligatorios')
     .min(5, 'El apellido debe tener al menos 5 caracteres')
     .max(30, 'El apellido debe tener como máximo 30 caracteres'),
-  email: z
+  correo: z
     .email("El correo no es válido")
     .nonempty('El correo es obligatorio'),
-  phone_number: z
+  numero_telefonico: z
     .string()
     .min(10, 'El número no es válido')
     .max(10, 'El número no es válido'),
-  password: z
+  contrasenia: z
     .string()
     .min(6, 'La contraseña debe tener al menos 6 caracteres')
     .max(12, 'La contraseña debe tener como máximo 12 caracteres'),
@@ -49,20 +52,33 @@ type FormFields = z.infer<typeof schema>
 
 export function RegisterForm() {
   const [open, setOpen] = useState(false)
+  const [errorRegister, setErrorRegister] = useState(false)
 
   const form = useForm<FormFields>({
     resolver: zodResolver(schema),
     defaultValues: {
-      first_name: '',
-      last_name: '',
-      email: '',
-      phone_number: '',
-      password: '',
+      nombres: '',
+      apellidos: '',
+      correo: '',
+      numero_telefonico: '',
+      contrasenia: '',
     },
   })
 
-  const onSubmit = (data: FormFields) => {
-    console.log(data)
+  async function onSubmit (values: FormFields){
+    const response = await registerStudent({
+      nombres: values.nombres,
+      apellidos: values.apellidos,
+      correo: values.correo,
+      numero_telefonico: values.numero_telefonico,
+      contrasenia: values.contrasenia
+    })
+
+    if(response.ok){
+      setOpen(false)
+    }else{
+      setErrorRegister(true);
+    }
   }
 
   return (
@@ -90,12 +106,12 @@ export function RegisterForm() {
           >
             <FormField
               control={form.control}
-              name="first_name"
+              name="nombres"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel
                     className={
-                      form.formState.errors.first_name ? 'text-destructive' : ''
+                      form.formState.errors.nombres ? 'text-destructive' : ''
                     }
                   >
                     Nombres
@@ -105,7 +121,7 @@ export function RegisterForm() {
                       placeholder="Tus nombres"
                       {...field}
                       className={
-                        form.formState.errors.first_name
+                        form.formState.errors.nombres
                           ? 'border-destructive focus-visible:ring-destructive'
                           : ''
                       }
@@ -117,12 +133,12 @@ export function RegisterForm() {
             />
             <FormField
               control={form.control}
-              name="last_name"
+              name="apellidos"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel
                     className={
-                      form.formState.errors.last_name ? 'text-destructive' : ''
+                      form.formState.errors.apellidos ? 'text-destructive' : ''
                     }
                   >
                     Apellidos
@@ -132,7 +148,7 @@ export function RegisterForm() {
                       placeholder="Tus apellidos"
                       {...field}
                       className={
-                        form.formState.errors.last_name
+                        form.formState.errors.apellidos
                           ? 'border-destructive focus-visible:ring-destructive'
                           : ''
                       }
@@ -144,12 +160,12 @@ export function RegisterForm() {
             />
             <FormField
               control={form.control}
-              name="email"
+              name="correo"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel
                     className={
-                      form.formState.errors.email ? 'text-destructive' : ''
+                      form.formState.errors.correo ? 'text-destructive' : ''
                     }
                   >
                     Correo
@@ -159,7 +175,7 @@ export function RegisterForm() {
                       placeholder="tu.email@udla.edu.co"
                       {...field}
                       className={
-                        form.formState.errors.email
+                        form.formState.errors.correo
                           ? 'border-destructive focus-visible:ring-destructive'
                           : ''
                       }
@@ -171,12 +187,12 @@ export function RegisterForm() {
             />
             <FormField
               control={form.control}
-              name="phone_number"
+              name="numero_telefonico"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel
                     className={
-                      form.formState.errors.phone_number
+                      form.formState.errors.numero_telefonico
                         ? 'text-destructive'
                         : ''
                     }
@@ -189,7 +205,7 @@ export function RegisterForm() {
                       {...field}
                       type='number'
                       className={
-                        form.formState.errors.phone_number
+                        form.formState.errors.numero_telefonico
                           ? 'border-destructive focus-visible:ring-destructive'
                           : ''
                       }
@@ -202,12 +218,12 @@ export function RegisterForm() {
 
             <FormField
               control={form.control}
-              name="password"
+              name="contrasenia"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel
                     className={
-                      form.formState.errors.password ? 'text-destructive' : ''
+                      form.formState.errors.contrasenia ? 'text-destructive' : ''
                     }
                   >
                     Contraseña
@@ -218,7 +234,7 @@ export function RegisterForm() {
                       type="password"
                       {...field}
                       className={
-                        form.formState.errors.password
+                        form.formState.errors.contrasenia
                           ? 'border-destructive focus-visible:ring-destructive'
                           : ''
                       }
@@ -228,6 +244,15 @@ export function RegisterForm() {
                 </FormItem>
               )}
             />
+
+            {errorRegister && (
+              <Alert variant={'destructive'}>
+                <AlertTitle>Eror al registrarse</AlertTitle>
+                <AlertDescription>
+                 Corrio un error al registrarse en la pagina, intentelo nuevamente.
+                </AlertDescription>
+              </Alert>
+            )}
 
             <Button
               type="submit"
