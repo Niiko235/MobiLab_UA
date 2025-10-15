@@ -12,7 +12,10 @@ type credentialsProps = {
 
 type User = {
   id: number
-  first_name: string
+  nombres: string
+  apellidos: string
+  contrasenia: string, 
+  numero_telefonico: string,
   email: string
   onboarding_terminado: boolean
 }
@@ -31,7 +34,7 @@ export async function singIn({ correo, contrasenia }: credentialsProps) {
     mysql = await createMySqlClient()
 
     const [response] = await mysql.query<(User & RowDataPacket)[]>(
-      'SELECT id, nombres, correo, onboarding_terminado FROM estudiantes WHERE correo = ? AND contrasenia = ?',
+      'SELECT id, nombres, apellidos, correo, numero_telefonico, contrasenia onboarding_terminado FROM estudiantes WHERE correo = ? AND contrasenia = ?',
       [correo, contrasenia]
     )
 
@@ -42,9 +45,12 @@ export async function singIn({ correo, contrasenia }: credentialsProps) {
     const token = jwt.sign(
       {
         id: response[0].id,
-        first_name: response[0].nombres,
+        nombres: response[0].nombres,
         email: response[0].correo,
         onboarding_termiando: response[0].onboarding_terminado,
+        apellidos: response[0].apellidos,
+        numero_telefonico: response[0].apellidos,
+        contrasenia: response[0].contrasenia
       },
       JWT_SECRET as string
     )

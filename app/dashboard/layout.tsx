@@ -17,7 +17,7 @@ export default async function DashboardLayout({
 
   return (
     <SidebarProvider defaultOpen={true}>
-      <AppSidebar name={response?.sesion?.first_name ?? ''} />
+      <AppSidebar name={response?.sesion?.nombres ?? ''} />
       <SidebarTrigger />
       <Toaster />
       <main className="">{children}</main>
