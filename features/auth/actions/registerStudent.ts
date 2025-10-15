@@ -1,7 +1,7 @@
 'use server'
 
 import { createMySqlClient } from '@/MySql/client/create-mysql-client'
-import { ResultSetHeader } from 'mysql2'
+import { ResultSetHeader, RowDataPacket } from 'mysql2'
 
 type registerProps = {
   nombres: string
@@ -22,16 +22,27 @@ export async function registerStudent({
   try {
     mysql = await createMySqlClient()
 
+    const [responseCorreo] = await mysql.query<(string & RowDataPacket) []>(
+      'SELECT id, correo FROM estudiantes WHERE correo = ?', [correo]
+    )
+
+    if(responseCorreo.length != 0){
+      throw new Error('El correo digitado ya esta en uso')
+    }
+
+    const [responseNumero] = await mysql.query<(string & RowDataPacket) []>(
+      'SELECT id, numero_telefonico FROM estudiantes WHERE numero_telefonico = ?', [numero_telefonico]
+    )
+
+    if(responseNumero.length != 0){
+      throw new Error('Numero telefonico digitado ya esta en uso')
+    }
+
     const [response] = await mysql.execute<ResultSetHeader>('INSERT INTO estudiantes (nombres, apellidos, correo, numero_telefonico, contrasenia) VALUES (?, ?, ?, ?, ?)', [nombres, apellidos, correo, numero_telefonico, contrasenia])
 
     if(response?.affectedRows != 1){
-        throw new Error("Error al intentar registrar el nuevo usuario")
+        throw new Error("Error al registrarse, intentolo nuevamente")
     }
-
-    console.log('\n\n\n\n\n\n\n');
-    console.log('Id de la insercion en registro');
-    console.log(response.insertId);
-    console.log('\n\n\n\n\n\n\n');
 
     return{
         ok: true

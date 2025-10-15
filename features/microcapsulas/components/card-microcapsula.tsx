@@ -1,39 +1,50 @@
 'use client'
 import Latex from 'react-latex-next'
 import 'katex/dist/katex.min.css'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
-export function CardMicrocapsula() {
+type microcapsulaProps = {
+  id: number
+  titulo: string
+  descripcion: string
+  ecuacion: string
+  footer: string
+  color_titulo: string
+}
+
+export function CardMicrocapsula({
+  id,
+  titulo,
+  descripcion,
+  ecuacion,
+  footer,
+  color_titulo,
+}: microcapsulaProps) {
   return (
-    <Card className='max-w-lg'>
+    <Card className="max-w-lg">
       <CardHeader>
         <CardTitle>
-          <p className='text-xl font-bold text-purple-600'>⚡️ Momento Lineal y conservación</p>
+          <p className={`text-xl font-bol ${color_titulo}`}>
+            {titulo}
+          </p>
         </CardTitle>
       </CardHeader>
-      <CardContent className='flex flex-col gap-2'>
+      <CardContent className="flex flex-col gap-2">
         <p>
-          <span className="font-bold">{'Definicion: '}</span>El momento lineal
-          (p) es el producto de la masa por la velocidad.
+          <span className="font-bold">{'Definicion: '}</span>
+          {descripcion}
         </p>
-        <div className='bg-gray-200 rounded-md p-0.5'>
-            <Latex>{`$$\\vec{p} = m \\cdot \\vec{v}$$`}</Latex>
+        <div className="bg-gray-200 rounded-md p-0.5">
+          <Latex>{ecuacion.replace(/\\\\/g, '\\')}</Latex>
         </div>
-        <p>
-          <span className="font-bold">{'Conservación: '}</span>En un sistema aislado, el momento total se conserva.
-        </p>
-        <Link href={'/dashboard/'}>
-            <ArrowRight className='text-purple-600'></ArrowRight>
+        <p>{footer}</p>
+        <Link href={`/dashboard/documentation/${id}`}> {/* FALTA LA URL DINAMICA */}
+          <ArrowRight
+            className={`w-5 h-5 transition-transform hover:translate-x-1 ${color_titulo}`}
+          ></ArrowRight>
         </Link>
-
-
       </CardContent>
     </Card>
   )

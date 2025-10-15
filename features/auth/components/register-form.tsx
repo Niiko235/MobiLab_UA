@@ -20,23 +20,23 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Alert, AlertTitle } from '@/components/ui/alert'
 import { registerStudent } from '../actions/registerStudent'
-
+import { toast } from 'sonner'
 
 const schema = z.object({
   nombres: z
     .string()
     .nonempty('Los nombres son obligatorios')
-    .min(5, 'El nombre debe tener al menos 5 caracteres')
+    .min(4, 'El nombre debe tener al menos 5 caracteres')
     .max(30, 'El nombre debe tener como máximo 30 caracteres'),
   apellidos: z
     .string()
     .nonempty('Los apellidos son obligatorios')
-    .min(5, 'El apellido debe tener al menos 5 caracteres')
+    .min(4, 'El apellido debe tener al menos 5 caracteres')
     .max(30, 'El apellido debe tener como máximo 30 caracteres'),
   correo: z
-    .email("El correo no es válido")
+    .email('El correo no es válido')
     .nonempty('El correo es obligatorio'),
   numero_telefonico: z
     .string()
@@ -53,6 +53,7 @@ type FormFields = z.infer<typeof schema>
 export function RegisterForm() {
   const [open, setOpen] = useState(false)
   const [errorRegister, setErrorRegister] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const form = useForm<FormFields>({
     resolver: zodResolver(schema),
@@ -65,19 +66,27 @@ export function RegisterForm() {
     },
   })
 
-  async function onSubmit (values: FormFields){
+  async function onSubmit(values: FormFields) {
     const response = await registerStudent({
       nombres: values.nombres,
       apellidos: values.apellidos,
       correo: values.correo,
       numero_telefonico: values.numero_telefonico,
-      contrasenia: values.contrasenia
+      contrasenia: values.contrasenia,
     })
 
-    if(response.ok){
+    if (response.ok) {
+      toast.success('¡Registro exitoso!', {
+        duration: 4000, // 4 segundos visible
+        className: 'bg-green-600 text-white border-none shadow-lg',
+      })
+      form.reset()
       setOpen(false)
-    }else{
-      setErrorRegister(true);
+    } else {
+      setErrorRegister(true)
+      setErrorMessage(
+        response.error ?? 'Error al resgistrarse en la plataforma'
+      )
     }
   }
 
@@ -203,7 +212,7 @@ export function RegisterForm() {
                     <Input
                       placeholder="Ej: 3001234567"
                       {...field}
-                      type='number'
+                      type="number"
                       className={
                         form.formState.errors.numero_telefonico
                           ? 'border-destructive focus-visible:ring-destructive'
@@ -223,7 +232,9 @@ export function RegisterForm() {
                 <FormItem>
                   <FormLabel
                     className={
-                      form.formState.errors.contrasenia ? 'text-destructive' : ''
+                      form.formState.errors.contrasenia
+                        ? 'text-destructive'
+                        : ''
                     }
                   >
                     Contraseña
@@ -247,10 +258,7 @@ export function RegisterForm() {
 
             {errorRegister && (
               <Alert variant={'destructive'}>
-                <AlertTitle>Eror al registrarse</AlertTitle>
-                <AlertDescription>
-                 Corrio un error al registrarse en la pagina, intentelo nuevamente.
-                </AlertDescription>
+                <AlertTitle>{errorMessage}</AlertTitle>
               </Alert>
             )}
 
