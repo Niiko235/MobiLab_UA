@@ -23,7 +23,7 @@ export async function registerStudent({
 }: registerProps) {
   try {
     const res = await fetch(
-      `http://localhost:3001/movi_lab/registrar-estudiante`,
+      `${process.env.API_URL}/registrar-estudiante`,
       {
         method: 'PUT',
         headers: {
@@ -45,7 +45,7 @@ export async function registerStudent({
       throw new Error(data.error)
     }
 
-    return res.json()
+    return data
     
   } catch (error) {
     return {

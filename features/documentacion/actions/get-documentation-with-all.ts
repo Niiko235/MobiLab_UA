@@ -38,7 +38,7 @@ export async function getDocumentationWithAll(idMicrocapsula: number) {
 
   try {
     const res = await fetch(
-      `http://localhost:3001/movi_lab/documentacion/${idMicrocapsula}`,
+      `${process.env.API_URL}/documentacion/${idMicrocapsula}`,
       {
         method: 'GET',
         headers: {

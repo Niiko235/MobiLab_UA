@@ -15,7 +15,7 @@ type responseType = {
 export async function getAllGlosary() {
   try {
     const res = await fetch(
-      `http://localhost:3001/movi_lab/glosario`,
+      `${process.env.API_URL}/glosario`,
       {
         method: 'GET',
         headers: {

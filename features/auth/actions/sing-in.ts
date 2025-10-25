@@ -29,7 +29,7 @@ const JWT_SECRET = process.env.JWT_SECRET
 export async function singIn({ correo, contrasenia }: credentialsProps) {
   try {
     const res = await fetch(
-      `http://localhost:3001/movi_lab/estudiante/login/${correo}/${contrasenia}`,
+      `${process.env.API_URL}/estudiante/login/${correo}/${contrasenia}`,
       {
         method: 'GET',
         headers: {

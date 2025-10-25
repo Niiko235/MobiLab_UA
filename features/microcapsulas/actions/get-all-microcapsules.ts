@@ -17,7 +17,7 @@ type responseType = {
 
 export async function getAllMicrocapsules() {
   try {
-    const res = await fetch(`http://localhost:3001/movi_lab/microcapsulas`, {
+    const res = await fetch(`${process.env.API_URL}/microcapsulas`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

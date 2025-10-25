@@ -20,7 +20,7 @@ export default async function getStadistics() {
     const idEstudiante = sesion?.sesion?.id
 
     const res = await fetch(
-      `http://localhost:3001/movi_lab/estadisticas/${idEstudiante}`,
+      `${process.env.API_URL}/estadisticas/${idEstudiante}`,
       {
         method: 'GET',
         headers: {
@@ -35,7 +35,7 @@ export default async function getStadistics() {
     if (data.ok === false || !data.data) {
       throw new Error(data.error ?? 'Error al traer la documentación')
     }
-    
+
     return data
   } catch (error) {
     return {
