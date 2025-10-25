@@ -1,14 +1,17 @@
 'use server'
 
-import { createMySqlClient } from '@/MySql/client/create-mysql-client'
-import { ResultSetHeader, RowDataPacket } from 'mysql2'
-
 type registerProps = {
   nombres: string
   apellidos: string
   correo: string
   numero_telefonico: string
   contrasenia: string
+}
+
+type responseType = {
+  ok: boolean
+  error?: string
+  data?: any
 }
 
 export async function registerStudent({
@@ -18,48 +21,39 @@ export async function registerStudent({
   numero_telefonico,
   contrasenia,
 }: registerProps) {
-  let mysql
   try {
-    mysql = await createMySqlClient()
-
-    const [responseCorreo] = await mysql.query<(string & RowDataPacket) []>(
-      'SELECT id, correo FROM estudiantes WHERE correo = ?', [correo]
+    const res = await fetch(
+      `http://localhost:3001/movi_lab/registrar-estudiante`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nombres,
+          apellidos,
+          correo,
+          numero_telefonico,
+          contrasenia,
+        }),
+      }
     )
 
-    if(responseCorreo.length != 0){
-      throw new Error('El correo digitado ya esta en uso')
+    const data: responseType = await res.json()
+
+    if(data.ok === false){
+      throw new Error(data.error)
     }
 
-    const [responseNumero] = await mysql.query<(string & RowDataPacket) []>(
-      'SELECT id, numero_telefonico FROM estudiantes WHERE numero_telefonico = ?', [numero_telefonico]
-    )
-
-    if(responseNumero.length != 0){
-      throw new Error('Numero telefonico digitado ya esta en uso')
-    }
-
-    const [response] = await mysql.execute<ResultSetHeader>('INSERT INTO estudiantes (nombres, apellidos, correo, numero_telefonico, contrasenia) VALUES (?, ?, ?, ?, ?)', [nombres, apellidos, correo, numero_telefonico, contrasenia])
-
-    if(response?.affectedRows != 1){
-        throw new Error("Error al registrarse, intentolo nuevamente")
-    }
-
-    return{
-        ok: true
-    }
-
-  } catch(error){
-    console.log(error)
+    return res.json()
+    
+  } catch (error) {
     return {
       ok: false,
       error:
         error instanceof Error
           ? error.message
-          : 'Error desconocido en el registro',
-    }
-  } finally {
-    if (mysql) {
-      await mysql.end()
+          : 'Error desconocido al registrar el estudiante',
     }
   }
 }

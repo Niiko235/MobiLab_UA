@@ -1,5 +1,4 @@
 'use client'
-
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -14,36 +13,59 @@ import {
 import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import * as z from 'zod'
+import { getSesion } from '@/features/auth/actions/get-sesion'
+
 
 const schema = z.object({
-  nombres: z
-    .string()
-    .nonempty('Los nombres son obligatorios')
-    .min(5, 'El nombre debe tener al menos 5 caracteres')
-    .max(30, 'El nombre debe tener como máximo 30 caracteres'),
-  apellidos: z
-    .string()
-    .nonempty('Los apellidos son obligatorios')
-    .min(5, 'El apellido debe tener al menos 5 caracteres')
-    .max(30, 'El apellido debe tener como máximo 30 caracteres'),
-  correo: z
-    .email('El correo no es válido')
-    .nonempty('El correo es obligatorio'),
-  numero_telefonico: z
-    .string()
-    .min(10, 'El número no es válido')
-    .max(10, 'El número no es válido'),
-  contrasenia: z
-    .string()
-    .min(6, 'La contraseña debe tener al menos 6 caracteres')
-    .max(12, 'La contraseña debe tener como máximo 12 caracteres'),
+  nombres: z.union([
+    z
+      .string()
+      .min(5, 'El nombre debe tener al menos 5 caracteres')
+      .max(30, 'El nombre debe tener como máximo 30 caracteres'),
+    z.literal(''),
+  ]),
+  apellidos: z.union([
+    z
+      .string()
+      .min(5, 'El apellido debe tener al menos 5 caracteres')
+      .max(30, 'El apellido debe tener como máximo 30 caracteres'),
+    z.literal(''),
+  ]),
+  correo: z.email('El correo no es válido').optional(),
+  numero_telefonico: z.union([
+    z
+      .string()
+      .min(10, 'El número no es válido')
+      .max(10, 'El número no es válido'),
+    z.literal(''),
+  ]),
+  contrasenia: z.union([
+    z
+      .string()
+      .min(6, 'La contraseña debe tener al menos 6 caracteres')
+      .max(12, 'La contraseña debe tener como máximo 12 caracteres'),
+    z.literal(''),
+  ]),
 })
 
 type FormFields = z.infer<typeof schema>
+
+type Sesion = {
+  id: number
+  nombres: string
+  apellidos: string
+  email: string
+  numero_telefonico: string
+  contrasenia: string
+  onboarding_terminado: boolean
+}
+
 export default function Page() {
   const [errorRegister, setErrorRegister] = useState(false)
+  const [data, setData] = useState<Sesion | null>()
+  const [errorMessage, setErrorMessage] = useState('')
 
   const form = useForm<FormFields>({
     resolver: zodResolver(schema),
@@ -56,8 +78,36 @@ export default function Page() {
     },
   })
 
+  useEffect(() => {
+    async function fectData() {
+      const response = await getSesion()
+
+      if (response.ok) {
+        setData(response.sesion)
+      }
+    }
+    fectData()
+  }, [])
+
   async function onSubmit(values: FormFields) {
-    console.log('uuhhhhhhh una diva virutal')
+    console.log('\n\n\n\n\n\n\n');
+    console.log('Llega a la funcion onSubmit');
+    console.log('\n\n\n\n\n\n\n');
+    // const response = await updateProfile({
+    //   id: data?.id ?? 0,
+    //   nombres: values.nombres || data?.nombres || 'pailas',
+    //   apellidos: values.apellidos || data?.apellidos || 'pailas',
+    //   numero_telefonico:
+    //     values.numero_telefonico || data?.numero_telefonico || 'pailas',
+    //   contrasenia: values.contrasenia || data?.contrasenia || 'pailas',
+    // })
+
+    // if (!response.ok) {
+    //   setErrorRegister(true)
+    //   setErrorMessage(response.error ?? 'Error desconocido')
+    // }
+
+    // form.reset()
   }
 
   return (
@@ -75,7 +125,7 @@ export default function Page() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Form {...form}>
+          <Form {...form} >
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               className="flex flex-wrap gap-4"
@@ -94,7 +144,7 @@ export default function Page() {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Tus nombres"
+                        placeholder={data?.nombres}
                         {...field}
                         className={
                           form.formState.errors.nombres
@@ -123,7 +173,7 @@ export default function Page() {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Tus apellidos"
+                        placeholder={data?.apellidos}
                         {...field}
                         className={
                           form.formState.errors.apellidos
@@ -136,33 +186,16 @@ export default function Page() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="correo"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel
-                      className={
-                        form.formState.errors.correo ? 'text-destructive' : ''
-                      }
-                    >
-                      Correo
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="tu.email@udla.edu.co"
-                        {...field}
-                        className={
-                          form.formState.errors.correo
-                            ? 'border-destructive focus-visible:ring-destructive'
-                            : ''
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <FormItem>
+                <FormLabel>Correo electrónico</FormLabel>
+                <FormControl>
+                  <Input
+                    value={data?.email ?? ''}
+                    disabled
+                    className="bg-gray-100 text-gray-500"
+                  />
+                </FormControl>
+              </FormItem>
               <FormField
                 control={form.control}
                 name="numero_telefonico"
@@ -179,7 +212,7 @@ export default function Page() {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Ej: 3001234567"
+                        placeholder={data?.numero_telefonico}
                         {...field}
                         type="number"
                         className={
@@ -210,7 +243,7 @@ export default function Page() {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Crea una contraseña"
+                        placeholder={data?.contrasenia}
                         type="password"
                         {...field}
                         className={
@@ -227,15 +260,12 @@ export default function Page() {
 
               {errorRegister && (
                 <Alert variant={'destructive'}>
-                  <AlertTitle>Eror al registrarse</AlertTitle>
-                  <AlertDescription>
-                    Corrio un error al registrarse en la pagina, intentelo
-                    nuevamente.
-                  </AlertDescription>
+                  <AlertTitle>Eror al Actualizar los datos</AlertTitle>
+                  <AlertDescription>{errorMessage}</AlertDescription>
                 </Alert>
               )}
 
-              <div className='flex items-end'>
+              <div className="flex items-end">
                 <Button
                   type="submit"
                   className="w-46 bg-purple-600"
@@ -244,6 +274,7 @@ export default function Page() {
                   Editar información
                 </Button>
               </div>
+              
             </form>
           </Form>
         </CardContent>

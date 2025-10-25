@@ -1,5 +1,6 @@
 import { TableBody, TableCell, TableRow, Table } from '@/components/ui/table'
-import { getAllGlosary } from '@/MySql/sql/get-all-glosary'
+import { getAllGlosary } from '@/features/glosary/actions/get-all-glosary'
+
 
 export default async function Page() {
   const response = await getAllGlosary()

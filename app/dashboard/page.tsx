@@ -18,12 +18,17 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import getStadistics from '@/features/dashboard/actions/get-stadistics'
 import {  ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
 
 
-export default function Page() {
+export default async function Page() {
+
+  const response = await getStadistics()
+  
+
   return (
     <div className="flex flex-col p-3 w-full gap-4">
       <header>
@@ -43,8 +48,9 @@ export default function Page() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-green-700">127</p>
-            <p className="text-gray-600 font-semibold">Total de partidas</p>
+            <p className="text-3xl font-bold text-green-700">{response?.data?.partidas ?? 0} paritdas</p>
+            <p className="text-gray-600 font-semibold">Total de partidas de todos 
+              los juegos</p>
           </CardContent>
         </Card>
         <Card className="min-w-xs">
@@ -57,7 +63,7 @@ export default function Page() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-purple-700">10.2 minutos</p>
+            <p className="text-3xl font-bold text-purple-700">{response?.data?.promedio ?? 0} segundos</p>
             <p className="text-gray-600 font-semibold">
               Promedio de tiempo por partida
             </p>

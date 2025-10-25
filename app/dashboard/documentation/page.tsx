@@ -1,5 +1,6 @@
+import { getAllMicrocapsules } from '@/features/microcapsulas/actions/get-all-microcapsules'
 import { CardMicrocapsula } from '@/features/microcapsulas/components/card-microcapsula'
-import { getAllMicrocapsules } from '@/MySql/sql/get-all-microcapsules'
+
 
 export default async function Page() {
   const response = await getAllMicrocapsules()

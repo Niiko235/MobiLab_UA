@@ -1,7 +1,7 @@
+import { getDocumentationWithAll } from '@/features/documentacion/actions/get-documentation-with-all'
 import { CardLinks } from '@/features/documentacion/components/card-links'
 import { CardTeoria } from '@/features/documentacion/components/card-teoria'
 import { CardVideos } from '@/features/documentacion/components/card-videos'
-import { getDocumentationWithAll } from '@/MySql/sql/get-documentation-with-all'
 
 type Props = {
   params: {
@@ -11,11 +11,10 @@ type Props = {
 
 export default async function Page({ params }: Props) {
   const paramsData = await params
-const id = Number(paramsData.id)
+  const id = Number(paramsData.id)
 
   const { ok, dataDocumentation, dataLinks, dataTheory, dataVideos } =
     await getDocumentationWithAll(id)
-    
 
   return (
     <div className="flex flex-col p-3 w-full gap-4">
@@ -38,10 +37,7 @@ const id = Number(paramsData.id)
             }
           ></CardTeoria>
           <CardLinks key={'cardUrls'} links={dataLinks}></CardLinks>
-          <CardVideos
-            key={'CardVideos'}
-            videos={dataVideos}
-          ></CardVideos>
+          <CardVideos key={'CardVideos'} videos={dataVideos}></CardVideos>
         </section>
       )}
     </div>
