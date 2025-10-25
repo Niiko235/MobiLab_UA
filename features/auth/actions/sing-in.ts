@@ -15,7 +15,6 @@ type User = {
   contrasenia: string
   numero_telefonico: string
   email: string
-  onboarding_terminado: boolean
 }
 
 type responseType = {

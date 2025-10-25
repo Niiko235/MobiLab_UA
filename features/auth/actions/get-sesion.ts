@@ -10,7 +10,6 @@ type Sesion = {
   contrasenia: string, 
   numero_telefonico: string,
   email: string
-  onboarding_terminado: boolean
 }
 
 export async function getSesion() {
@@ -37,7 +36,6 @@ export async function getSesion() {
       email: token.email,
       apellidos: token.apellidos,
       numero_telefonico: token.numero_telefonico,
-      onboarding_terminado: token.onboarding_terminado,
       contrasenia: token.contrasenia
       
     }

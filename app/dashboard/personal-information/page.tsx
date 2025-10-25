@@ -59,7 +59,6 @@ type Sesion = {
   email: string
   numero_telefonico: string
   contrasenia: string
-  onboarding_terminado: boolean
 }
 
 export default function Page() {
