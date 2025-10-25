@@ -50,7 +50,7 @@ export default async function Page() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-purple-700">{response?.data?.promedio ?? 0} segundos</p>
+            <p className="text-3xl font-bold text-purple-700">{response?.data?.promedio.toFixed(2) ?? 0} segundos</p>
             <p className="text-gray-600 font-semibold">
               Promedio de tiempo por partida
             </p>
