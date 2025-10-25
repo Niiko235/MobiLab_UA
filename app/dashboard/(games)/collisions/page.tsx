@@ -1,10 +1,12 @@
 export default function Page() {
-    return(
-        <div className="h-screen flex items-center justify-center font-bold ">
-            <h1>
-                juego de colisiones en proceso...
-            </h1>
-        </div>
-    )
-
+  return (
+    <div className="h-full flex p-4  justify-center">
+      <div className="h-150 w-250">
+        <iframe
+          src="/games/choques/index.html"
+          className="h-150 w-250 border rounded-lg shadow-lg"
+        ></iframe>
+      </div>
+    </div>
+  )
 }
