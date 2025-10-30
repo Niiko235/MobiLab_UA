@@ -29,11 +29,6 @@ export const topycs = [
     url: "/dashboard/impulse-and-momentum",
     icon: '🎯',
   },
-  {
-    title: "Sistema de Particulas",
-    url: "/dashboard/system-of-particles",
-    icon: '🌌',
-  },
   
 ]
 

@@ -35,7 +35,7 @@ export default async function Page() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-green-700">{response?.data?.partidas ?? 0} paritdas</p>
+            <p className="text-3xl font-bold text-green-700">{response?.data?.partidas ?? 0} partidas</p>
             <p className="text-gray-600 font-semibold">Total de partidas de todos 
               los juegos</p>
           </CardContent>
@@ -103,21 +103,6 @@ export default async function Page() {
                   </CardTitle>
                   <CardAction>
                     <p className="text-blue-500">
-                      <ArrowRight></ArrowRight>
-                    </p>
-                  </CardAction>
-                </CardHeader>
-              </Card>
-            </Link>
-
-            <Link href={'/dashboard/system-of-particles'}>
-              <Card className="bg-purple-100 w-xs">
-                <CardHeader>
-                  <CardTitle className="flex justify-center">
-                    <h1 className="text-lg">🌌 Sistema de Partículas</h1>
-                  </CardTitle>
-                  <CardAction>
-                    <p className="text-purple-500">
                       <ArrowRight></ArrowRight>
                     </p>
                   </CardAction>
