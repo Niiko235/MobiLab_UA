@@ -1,4 +1,10 @@
 'use client'
+
+import { useEffect, useState } from 'react'
+import { email, z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -11,43 +17,31 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { useEffect, useState } from 'react'
-import * as z from 'zod'
 import { getSesion } from '@/features/auth/actions/get-sesion'
-
+import { updateProfile } from '@/features/auth/actions/update-profile'
 
 const schema = z.object({
-  nombres: z.union([
-    z
-      .string()
-      .min(5, 'El nombre debe tener al menos 5 caracteres')
-      .max(30, 'El nombre debe tener como máximo 30 caracteres'),
-    z.literal(''),
-  ]),
-  apellidos: z.union([
-    z
-      .string()
-      .min(5, 'El apellido debe tener al menos 5 caracteres')
-      .max(30, 'El apellido debe tener como máximo 30 caracteres'),
-    z.literal(''),
-  ]),
-  correo: z.email('El correo no es válido').optional(),
-  numero_telefonico: z.union([
-    z
-      .string()
-      .min(10, 'El número no es válido')
-      .max(10, 'El número no es válido'),
-    z.literal(''),
-  ]),
-  contrasenia: z.union([
-    z
-      .string()
-      .min(6, 'La contraseña debe tener al menos 6 caracteres')
-      .max(12, 'La contraseña debe tener como máximo 12 caracteres'),
-    z.literal(''),
-  ]),
+ nombres: z
+    .string()
+    .nonempty('Los nombres son obligatorios')
+    .min(2, 'El nombre debe tener al menos 2 caracteres')
+    .max(30, 'El nombre debe tener como máximo 30 caracteres'),
+  apellidos: z
+    .string()
+    .nonempty('Los apellidos son obligatorios')
+    .min(2, 'El apellido debe tener al menos 2 caracteres')
+    .max(30, 'El apellido debe tener como máximo 30 caracteres'),
+  correo: z
+    .email('El correo no es válido')
+    .nonempty('El correo es obligatorio'),
+  numero_telefonico: z
+    .string()
+    .min(10, 'El número no es válido')
+    .max(10, 'El número no es válido'),
+  contrasenia: z
+    .string()
+    .min(6, 'La contraseña debe tener al menos 6 caracteres')
+    .max(12, 'La contraseña debe tener como máximo 12 caracteres'),
 })
 
 type FormFields = z.infer<typeof schema>
@@ -62,9 +56,11 @@ type Sesion = {
 }
 
 export default function Page() {
-  const [errorRegister, setErrorRegister] = useState(false)
-  const [data, setData] = useState<Sesion | null>()
-  const [errorMessage, setErrorMessage] = useState('')
+  const [sesion, setSesion] = useState<Sesion | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+
+  const router = useRouter()
 
   const form = useForm<FormFields>({
     resolver: zodResolver(schema),
@@ -78,35 +74,64 @@ export default function Page() {
   })
 
   useEffect(() => {
-    async function fectData() {
+    ;(async () => {
       const response = await getSesion()
 
-      if (response.ok) {
-        setData(response.sesion)
+      if (response.ok && response.sesion) {
+        const sesionData = response.sesion
+        setSesion(sesionData)
+        form.reset({
+          nombres: sesionData.nombres ?? '',
+          apellidos: sesionData.apellidos ?? '',
+          correo: sesionData.email ?? '',
+          numero_telefonico: sesionData.numero_telefonico ?? '',
+          contrasenia: sesionData.contrasenia ?? '',
+        })
       }
-    }
-    fectData()
-  }, [])
+    })()
+  }, [form])
 
   async function onSubmit(values: FormFields) {
-    console.log('\n\n\n\n\n\n\n');
-    console.log('Llega a la funcion onSubmit');
-    console.log('\n\n\n\n\n\n\n');
-    // const response = await updateProfile({
-    //   id: data?.id ?? 0,
-    //   nombres: values.nombres || data?.nombres || 'pailas',
-    //   apellidos: values.apellidos || data?.apellidos || 'pailas',
-    //   numero_telefonico:
-    //     values.numero_telefonico || data?.numero_telefonico || 'pailas',
-    //   contrasenia: values.contrasenia || data?.contrasenia || 'pailas',
-    // })
+    if (!sesion) return
 
-    // if (!response.ok) {
-    //   setErrorRegister(true)
-    //   setErrorMessage(response.error ?? 'Error desconocido')
-    // }
+    setErrorMessage(null)
+    setSuccessMessage(null)
 
-    // form.reset()
+    const payload = {
+      id: sesion.id,
+      nombres: values.nombres || sesion.nombres,
+      apellidos: values.apellidos || sesion.apellidos,
+      numero_telefonico: values.numero_telefonico || sesion.numero_telefonico,
+      contrasenia: values.contrasenia || sesion.contrasenia,
+      email: sesion.email,
+    }
+
+    console.log(payload);
+    
+    const response = await updateProfile(payload)
+
+    if (!response.ok) {
+      setErrorMessage(response.error ?? 'Error al actualizar los datos.')
+      return
+    }
+
+    setSuccessMessage('Información actualizada correctamente.')
+    setSesion({
+      ...sesion,
+      nombres: payload.nombres,
+      apellidos: payload.apellidos,
+      numero_telefonico: payload.numero_telefonico,
+      contrasenia: payload.contrasenia,
+    })
+    form.reset({
+      nombres: payload.nombres,
+      apellidos: payload.apellidos,
+      numero_telefonico: payload.numero_telefonico,
+      contrasenia: payload.contrasenia,
+    })
+
+    router.push('/dashboard')
+     
   }
 
   return (
@@ -124,7 +149,7 @@ export default function Page() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Form {...form} >
+          <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               className="flex flex-wrap gap-4"
@@ -143,8 +168,9 @@ export default function Page() {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder={data?.nombres}
+                        placeholder={sesion?.nombres}
                         {...field}
+                        disabled={!sesion || form.formState.isSubmitting}
                         className={
                           form.formState.errors.nombres
                             ? 'border-destructive focus-visible:ring-destructive'
@@ -156,6 +182,7 @@ export default function Page() {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="apellidos"
@@ -172,8 +199,9 @@ export default function Page() {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder={data?.apellidos}
+                        placeholder={sesion?.apellidos}
                         {...field}
+                        disabled={!sesion || form.formState.isSubmitting}
                         className={
                           form.formState.errors.apellidos
                             ? 'border-destructive focus-visible:ring-destructive'
@@ -185,16 +213,18 @@ export default function Page() {
                   </FormItem>
                 )}
               />
+
               <FormItem>
                 <FormLabel>Correo electrónico</FormLabel>
                 <FormControl>
                   <Input
-                    value={data?.email ?? ''}
+                    value={sesion?.email ?? ''}
                     disabled
                     className="bg-gray-100 text-gray-500"
                   />
                 </FormControl>
               </FormItem>
+
               <FormField
                 control={form.control}
                 name="numero_telefonico"
@@ -211,9 +241,9 @@ export default function Page() {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder={data?.numero_telefonico}
+                        placeholder={sesion?.numero_telefonico}
                         {...field}
-                        type="number"
+                        disabled={!sesion || form.formState.isSubmitting}
                         className={
                           form.formState.errors.numero_telefonico
                             ? 'border-destructive focus-visible:ring-destructive'
@@ -242,9 +272,9 @@ export default function Page() {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder={data?.contrasenia}
-                        type="password"
+                        placeholder={sesion?.contrasenia}
                         {...field}
+                        disabled={!sesion || form.formState.isSubmitting}
                         className={
                           form.formState.errors.contrasenia
                             ? 'border-destructive focus-visible:ring-destructive'
@@ -257,10 +287,17 @@ export default function Page() {
                 )}
               />
 
-              {errorRegister && (
-                <Alert variant={'destructive'}>
-                  <AlertTitle>Eror al Actualizar los datos</AlertTitle>
+              {errorMessage && (
+                <Alert variant="destructive" className="w-full">
+                  <AlertTitle>Error al actualizar los datos</AlertTitle>
                   <AlertDescription>{errorMessage}</AlertDescription>
+                </Alert>
+              )}
+
+              {successMessage && (
+                <Alert className="w-full bg-emerald-50 text-emerald-700">
+                  <AlertTitle>Actualización exitosa</AlertTitle>
+                  <AlertDescription>{successMessage}</AlertDescription>
                 </Alert>
               )}
 
@@ -268,12 +305,13 @@ export default function Page() {
                 <Button
                   type="submit"
                   className="w-46 bg-purple-600"
-                  disabled={form.formState.isSubmitting}
+                  disabled={!sesion || form.formState.isSubmitting}
                 >
-                  Editar información
+                  {form.formState.isSubmitting
+                    ? 'Guardando...'
+                    : 'Editar información'}
                 </Button>
               </div>
-              
             </form>
           </Form>
         </CardContent>
