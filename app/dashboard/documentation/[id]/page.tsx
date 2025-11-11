@@ -20,7 +20,7 @@ export default async function Page({ params }: Props) {
     <div className="flex flex-col p-3 w-full gap-4">
       <header>
         <h1 className="font-bold text-2xl">
-          ⚡️ Momento lineal y su conservación
+          {dataDocumentation?.title || 'Documentación 📚'}
         </h1>
         <h3 className="text-gray-500 font-semibold">
           Aquí podras encontrar la documentación completa sobre este tema

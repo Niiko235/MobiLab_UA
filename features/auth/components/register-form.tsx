@@ -28,12 +28,12 @@ const schema = z.object({
   nombres: z
     .string()
     .nonempty('Los nombres son obligatorios')
-    .min(4, 'El nombre debe tener al menos 5 caracteres')
+    .min(2, 'El nombre debe tener al menos 2 caracteres')
     .max(30, 'El nombre debe tener como máximo 30 caracteres'),
   apellidos: z
     .string()
     .nonempty('Los apellidos son obligatorios')
-    .min(4, 'El apellido debe tener al menos 5 caracteres')
+    .min(2, 'El apellido debe tener al menos 2 caracteres')
     .max(30, 'El apellido debe tener como máximo 30 caracteres'),
   correo: z
     .email('El correo no es válido')

@@ -14,6 +14,14 @@ type microcapsulaProps = {
   color_titulo: string
 }
 
+const COLOR_STYLES: Record<string, { text: string; bg: string }> = {
+  purple: { text: 'text-purple-600', bg: 'bg-purple-100' },
+  red: { text: 'text-red-600', bg: 'bg-red-100' },
+  blue: { text: 'text-blue-600', bg: 'bg-blue-100' },
+  green: { text: 'text-green-600', bg: 'bg-green-100' },
+  // agrega los colores necesarios
+}
+
 export function CardMicrocapsula({
   id,
   titulo,
@@ -22,11 +30,13 @@ export function CardMicrocapsula({
   footer,
   color_titulo,
 }: microcapsulaProps) {
+  const color = COLOR_STYLES[color_titulo] ?? COLOR_STYLES.purple
+
   return (
     <Card className="max-w-lg">
       <CardHeader>
         <CardTitle>
-          <p className={`text-xl font-bol ${color_titulo}`}>
+          <p className={`text-xl font-bold ${color.text}`}>
             {titulo}
           </p>
         </CardTitle>
@@ -36,14 +46,14 @@ export function CardMicrocapsula({
           <span className="font-bold">{'Definicion: '}</span>
           {descripcion}
         </p>
-        <div className="bg-gray-200 rounded-md p-0.5">
+        <div className={`${color.bg} rounded-md p-0.5`}>
           <Latex>{ecuacion.replace(/\\\\/g, '\\')}</Latex>
         </div>
         <p>{footer}</p>
-        <Link href={`/dashboard/documentation/${id}`}> {/* FALTA LA URL DINAMICA */}
-          <ArrowRight
-            className={`w-5 h-5 transition-transform hover:translate-x-1 ${color_titulo}`}
-          ></ArrowRight>
+        <Link href={`/dashboard/documentation/${id}`}>
+          {' '}
+          {/* FALTA LA URL DINAMICA */}
+          <ArrowRight className={`w-5 h-5 transition-transform hover:translate-x-1 ${color.text}`} />
         </Link>
       </CardContent>
     </Card>
