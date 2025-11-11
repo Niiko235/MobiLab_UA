@@ -19,7 +19,7 @@ export default async function Page() {
         <section className="w-full flex flex-wrap gap-4">
           {response.data?.map((item) => {
             return (
-              <CardMicrocapsula
+              <CardMicrocapsula 
                 key={item.id}
                 id={item.id}
                 titulo={item.titulo}
